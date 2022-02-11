@@ -1,88 +1,83 @@
 #include "gradientdescent.h"
 
 
-#include "GradientDescent.h"
-
-
-
 
 
 GradientDescent::GradientDescent() {
 
-    m_nDims = 0;
-    m_stepSize = 0.0;
-    m_maxIter = 1;
-    m_h = 0.001;
-    m_gradientThresh = 1e-09;
+    nDims_ = 0;
+    alpha_ = 0.0;
+    maxIter_ = 1;
+    h_ = 0.001;
+    gradientThresh_ = 1e-09;
 }
 
 GradientDescent::~GradientDescent() {
 
 }
-void GradientDescent::SetObjectFunc(const Function & objectFunc){
-    objectFunc_ = objectFunc;
-}
-void GradientDescent::SetStartPoint(const std::vector<double> startPoint) {
-    m_startPoint = startPoint;
-    m_nDims = m_startPoint.size();
-}
 
-void GradientDescent::SetStepSize(double stepSize) {
-    m_stepSize = stepSize;
+void GradientDescent::InitFunctions(const Function &objectFunc, const std::vector<Function> &gradFunc)
+{
+     objectFunc_ = objectFunc;
+     gradFunc_ = gradFunc;
+
 }
 
-void GradientDescent::SetMaxIterations(int maxIterations) {
-    m_maxIter = maxIterations;
-}
 
-void GradientDescent::SetGradientThresh(double gradientThresh) {
-    m_gradientThresh = gradientThresh;
-}
+bool GradientDescent::Optimize(std::vector<double> & funcLoc, double & funcVal) {
 
-bool GradientDescent::Optimize(std::vector<double> * funcLoc, double *funcVal) {
-
-    m_currentPoint = m_startPoint;
+    currentPoint_ = startPoint_;
     int iterCount = 0;
     double gradientMagnitude = 1.0;
 
-    while ((iterCount < m_maxIter) && (gradientMagnitude > m_gradientThresh)) {
+    while ((iterCount < maxIter_) && (gradientMagnitude > gradientThresh_)) {
         std::vector<double> gradientVector = ComputeGradientVector();
         gradientMagnitude = ComputeGradientMagnitude(gradientVector);
 
-        std::vector<double> newPoint  = m_currentPoint;
-        for (int i = 0; i < m_nDims; ++i) {
-            newPoint[i]  += -(gradientVector[i] * m_stepSize);
+        std::vector<double> newPoint  = currentPoint_;
+        for (int i = 0; i < nDims_; ++i) {
+            newPoint[i]  += -(gradientVector[i] * alpha_);
         }
-        history_.push_back(m_currentPoint);
-        m_currentPoint = newPoint;
+        history_.push_back(currentPoint_);
+        currentPoint_ = newPoint;
         iterCount++;
     }
-   *funcLoc = m_currentPoint;
-    *funcVal = objectFunc_(&m_currentPoint);
+   funcLoc = currentPoint_;
+   funcVal = objectFunc_(currentPoint_);
 
 
     return 0;
 }
 
-double GradientDescent::ComputeGradient(int dim) {
-    std::vector<double> newPoint = m_currentPoint;
-    newPoint[dim] += m_h;
-    double functionVal_1 = objectFunc_(&m_currentPoint);
-    double functionVal_2 = objectFunc_(&newPoint);
+void GradientDescent::Init(const Point &startPoint, double stepSize,
+                           uint maxIterations,double gradientThresh )
+{
+    startPoint_ = startPoint;
+    nDims_ = startPoint.size();
+    alpha_ = stepSize;
+    maxIter_ = maxIterations;
+    gradientThresh_ = gradientThresh;
+}
 
-    return (functionVal_2 - functionVal_1) / m_h;
+double GradientDescent::ComputeGradient(int dim) {
+    std::vector<double> newPoint = currentPoint_;
+    newPoint[dim] += h_;
+    double functionVal_1 = objectFunc_(currentPoint_);
+    double functionVal_2 = objectFunc_(newPoint);
+
+    return (functionVal_2 - functionVal_1) / h_;
 
 }
 double GradientDescent::ComputeGradientAnalytical(int dim) {
-    std::vector<double> newPoint = m_currentPoint;
-    newPoint[dim] += m_h;
-    return gradFunc_.at(dim)(&newPoint);
+    std::vector<double> newPoint = currentPoint_;
+    newPoint[dim] += h_;
+    return gradFunc_.at(dim)(newPoint);
 
 }
 
 std::vector<double> GradientDescent::ComputeGradientVector() {
-    std::vector<double> gradientVector = m_currentPoint;
-    for (int i = 0; i < m_nDims; ++i){
+    std::vector<double> gradientVector = currentPoint_;
+    for (int i = 0; i < nDims_; ++i){
         gradientVector[i] = ComputeGradientAnalytical(i);
     }
 
@@ -91,15 +86,12 @@ std::vector<double> GradientDescent::ComputeGradientVector() {
 
 double GradientDescent::ComputeGradientMagnitude(std::vector<double> gradientVector) {
     double vectorMagnitude = 0.0;
-    for (int i = 0; i < m_nDims; ++i) {
+    for (int i = 0; i < nDims_; ++i) {
         vectorMagnitude += gradientVector[i] * gradientVector[i];
     }
     return sqrt(vectorMagnitude);
 
 }
 
-void GradientDescent::SetGradFunc(const std::vector<Function> & gradFunc) {
-    gradFunc_ = gradFunc;
 
-}
 
