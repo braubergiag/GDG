@@ -30,6 +30,9 @@ bool GradientDescent::Optimize(std::vector<double> & funcLoc, double & funcVal) 
     int iterCount = 0;
     double gradientMagnitude = 1.0;
 
+
+
+    history_.push_back(funcLoc);
     while ((iterCount < maxIter_) && (gradientMagnitude > gradientThresh_)) {
         std::vector<double> gradientVector = ComputeGradientVector();
         gradientMagnitude = ComputeGradientMagnitude(gradientVector);
@@ -91,6 +94,11 @@ double GradientDescent::ComputeGradientMagnitude(std::vector<double> gradientVec
     }
     return sqrt(vectorMagnitude);
 
+}
+
+const std::vector<Point> &GradientDescent::history() const
+{
+    return history_;
 }
 
 

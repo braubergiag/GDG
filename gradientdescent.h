@@ -20,6 +20,8 @@ public:
     void Init(const Point& startPoint, double stepSize, uint maxIterations,double gradientThresh);
 
 
+    const std::vector<Point> &history() const;
+
 private:
     double ComputeGradient (int dim);
     double ComputeGradientAnalytical(int dim);

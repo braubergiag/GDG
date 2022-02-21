@@ -89,6 +89,7 @@ QCustomPlot *MainWindow::createCounterPlot()
 
 void MainWindow::on_actionSet_Model_triggered()
 {
-    DialogModel * dlg = new DialogModel(this);
+    DialogModel * dlg = new DialogModel(this,model_);
+    dlg->exec();
 }
 

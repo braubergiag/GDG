@@ -12,7 +12,7 @@ class DialogModel : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogModel(QWidget *parent = nullptr);
+    explicit DialogModel(QWidget *parent = nullptr, Model * model = nullptr);
     ~DialogModel();
 
 private:

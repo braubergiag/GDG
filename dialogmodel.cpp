@@ -10,5 +10,6 @@ DialogModel::DialogModel(QWidget *parent,Model * model) :
 
 DialogModel::~DialogModel()
 {
+    delete model_;
     delete ui;
 }
