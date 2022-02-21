@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     dialogmodel.cpp \
+    functionhandler.cpp \
     gradientdescent.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     dialogmodel.h \
+    functionhandler.h \
     gradientdescent.h \
     mainwindow.h \
     model.h \
