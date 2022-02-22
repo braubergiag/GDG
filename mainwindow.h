@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "qcustomplot.h"
 #include "dialogmodel.h"
+#include "functionhandler.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -16,6 +17,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void loadCounterPlot(QCustomPlot * customPLot);
+    void setFunctionsLibrary();
     QCustomPlot * createCounterPlot();
 
 private slots:
@@ -26,6 +28,7 @@ private:
 
     Ui::MainWindow *ui;
     Model * model_ = nullptr;
+    FunctionsLibrary *  functionsLibrary_ = nullptr;
     QCustomPlot * counterPlot_ = nullptr;
 };
 #endif // MAINWINDOW_H

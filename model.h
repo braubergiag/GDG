@@ -3,7 +3,7 @@
 
 
 #include "gradientdescent.h"
-
+#include "functionhandler.h"
 class Model
 {
 public:
@@ -11,6 +11,7 @@ public:
 
 private:
     GradientDescent gd_;
+    FunctionHandler functionHandler_;
     std::vector<Point> history_;
 };
 

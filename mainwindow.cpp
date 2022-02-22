@@ -8,9 +8,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
 
+    functionsLibrary_ = new FunctionsLibrary();
+    setFunctionsLibrary();
+
+
     counterPlot_ = createCounterPlot();
     loadCounterPlot(counterPlot_);
-
 
 
 
@@ -20,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete counterPlot_;
+    delete functionsLibrary_;
     delete model_;
     delete ui;
 }
@@ -29,6 +33,73 @@ void MainWindow::loadCounterPlot( QCustomPlot * customPlot)
     if (customPlot){
         ui->verticalLayout->addWidget(customPlot);
     }
+
+
+}
+
+void MainWindow::setFunctionsLibrary()
+{
+    {
+        auto f1View = "(1 - x) * (1 - x) + 100 * (y - x * x) * (y - x * x)";
+        auto f1 = [](const Point &  functionLoc) {
+            double x = functionLoc.at(0);
+            double y = functionLoc.at(1);
+            return (1 - x) * (1 - x) + 100 * (y - x * x) * (y - x * x);
+        };
+        auto f1_dx = [](const Point &  functionLoc) {
+            double x = functionLoc.at(0);
+            double y = functionLoc.at(1);
+            return x * (400* x * x + 2) - 400*x*y - 2;
+        };
+        auto f1_dy = [](const Point &  functionLoc) {
+            double x = functionLoc.at(0);
+            double y = functionLoc.at(1);
+            return 200*y - 200* x * x;
+        };
+
+        FunctionHandler fh_1(f1,{f1_dx,f1_dy},f1View);
+        (*functionsLibrary_)[f1View] = fh_1;
+    }
+
+    {
+        auto f2View = "(x * x * cos(x) - x) / 10";
+        auto f2 = [](const Point &  functionLoc) {
+            double x = functionLoc.at(0);
+            return (x * x * cos(x) - x) / 10;
+        };
+        auto f2_dx = [](const Point &  functionLoc) {
+            double x = functionLoc.at(0);
+            return -1./10*x*x*sin(x) + 1./5*x*cos(x) - 1./10;
+        };
+
+        FunctionHandler fh_2(f2,{f2_dx},f2View);
+        (*functionsLibrary_)[f2View] = fh_2;
+
+
+    }
+    {
+        auto f3View = "x^4 + 2 * x^3 - 6 * x^2 + 4*x + 2";
+        auto f3 = [](const Point &  functionLoc) {
+            double x = functionLoc.at(0);
+            return pow(x,4) + 2 * pow(x,3) - 6 * x *x + 4*x + 2;
+        };
+        auto f3_dx = [](const Point &  functionLoc) {
+            double x = functionLoc.at(0);
+            return 4 * pow(x,3) + 6 * x * x - 12 * x + 4;
+        };
+
+        FunctionHandler fh_3(f3,{f3_dx},f3View);
+        (*functionsLibrary_)[f3View] = fh_3;
+
+    }
+
+
+
+
+
+
+
+
 
 
 }
