@@ -42,7 +42,7 @@
     <string>Функция для оптимизации:</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBox">
+  <widget class="QComboBox" name="comboBoxFunc">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -51,21 +51,6 @@
      <height>25</height>
     </rect>
    </property>
-   <item>
-    <property name="text">
-     <string>x*x + x * y + y*y</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string> (x * x * cos(x) - x) / 10</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string> (1 - x) * (1 - x) + 100 * (y - x * x) * (y - x * x)</string>
-    </property>
-   </item>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
@@ -80,7 +65,7 @@
     <string>Координаты начальной точки:</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -91,28 +76,11 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>x:</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="lineEdit"/>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>y:</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="lineEdit_2"/>
+     <widget class="QLineEdit" name="lineEdit_coords"/>
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -130,11 +98,15 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="lineEdit_3"/>
+     <widget class="QLineEdit" name="lineEdit_iterCount">
+      <property name="text">
+       <string>1000</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -152,7 +124,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="lineEdit_4"/>
+     <widget class="QLineEdit" name="lineEdit_4">
+      <property name="text">
+       <string>0.01</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

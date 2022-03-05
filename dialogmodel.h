@@ -2,6 +2,8 @@
 #define DIALOGMODEL_H
 
 #include <QDialog>
+#include <QLineEdit>
+#include <QDebug>
 #include "model.h"
 #include "functionhandler.h"
 namespace Ui {
@@ -17,6 +19,13 @@ public:
                          Model * model = nullptr,
                          FunctionsLibrary * functionsLibrary = nullptr);
     ~DialogModel();
+
+
+    std::vector<double> parseTxtToVector(QLineEdit * lineEdit);
+
+
+private slots:
+    void on_buttonBox_accepted();
 
 private:
     Ui::DialogModel *ui;

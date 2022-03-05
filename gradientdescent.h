@@ -5,10 +5,19 @@
 #include <vector>
 #include <functional>
 #include <cmath>
+#include <iostream>
 
 
 using Function = std::function<double(const std::vector<double> &)>;
 using Point = std::vector<double>;
+
+enum class StoppingCriterion {
+    byGradientMagnitude,
+    byDeltaChangeMagnitude,
+    byValueChangeMagnitude
+};
+
+
 
 
 class GradientDescent {

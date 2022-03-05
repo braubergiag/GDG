@@ -30,7 +30,7 @@ bool GradientDescent::Optimize(std::vector<double> & funcLoc, double & funcVal) 
     int iterCount = 0;
     double gradientMagnitude = 1.0;
 
-
+    history_.clear();
 
     history_.push_back(funcLoc);
     while ((iterCount < maxIter_) && (gradientMagnitude > gradientThresh_)) {
@@ -44,9 +44,18 @@ bool GradientDescent::Optimize(std::vector<double> & funcLoc, double & funcVal) 
         history_.push_back(currentPoint_);
         currentPoint_ = newPoint;
         iterCount++;
+
+        for (auto v : currentPoint_) {
+              std::cout << v << " " ;
+        }
+        std::cout << " " << objectFunc_(currentPoint_);
+        std::cout << std::endl;
+
     }
    funcLoc = currentPoint_;
    funcVal = objectFunc_(currentPoint_);
+
+
 
 
     return 0;
