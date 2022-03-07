@@ -9,7 +9,7 @@ GradientDescent::GradientDescent() {
     alpha_ = 0.0;
     maxIter_ = 1;
     h_ = 0.001;
-    gradientThresh_ = 1e-09;
+    eps_ = 1e-09;
 }
 
 GradientDescent::~GradientDescent() {
@@ -28,20 +28,41 @@ bool GradientDescent::Optimize(std::vector<double> & funcLoc, double & funcVal) 
 
     currentPoint_ = startPoint_;
     int iterCount = 0;
-    double gradientMagnitude = 1.0;
+
+
+    double (GradientDescent:: *evalMagnitude)();
+
+    switch (stoppingCriterion_) {
+        case StoppingCriterion::byDeltaChangeMagnitude:
+            evalMagnitude = &GradientDescent::ComputeDeltaChangeMagnitude;
+            break;
+        case StoppingCriterion::byValueChangeMagnitude:
+            evalMagnitude =&GradientDescent::ComputeValueChangeMagnitude;
+            break;
+        case StoppingCriterion::byGradientMagnitude:
+            evalMagnitude = &GradientDescent::ComputeGradientMagnitude;
+            break;
+        default:
+            perror("Stopping criteria does not set.");
+
+    }
+
+
+
 
     history_.clear();
 
     history_.push_back(funcLoc);
-    while ((iterCount < maxIter_) && (gradientMagnitude > gradientThresh_)) {
-        std::vector<double> gradientVector = ComputeGradientVector();
-        gradientMagnitude = ComputeGradientMagnitude(gradientVector);
+    while ((iterCount < maxIter_) && (stoppingMagnitude_ > eps_)) {
+        gradientVector_ = ComputeGradientVector();
+        stoppingMagnitude_ = (this->*evalMagnitude)();
 
         std::vector<double> newPoint  = currentPoint_;
         for (int i = 0; i < nDims_; ++i) {
-            newPoint[i]  += -(gradientVector[i] * alpha_);
+            newPoint[i]  += -(gradientVector_[i] * alpha_);
         }
         history_.push_back(currentPoint_);
+        prevPoint_ = currentPoint_;
         currentPoint_ = newPoint;
         iterCount++;
 
@@ -68,7 +89,14 @@ void GradientDescent::Init(const Point &startPoint, double stepSize,
     nDims_ = startPoint.size();
     alpha_ = stepSize;
     maxIter_ = maxIterations;
-    gradientThresh_ = gradientThresh;
+    eps_ = gradientThresh;
+
+
+
+
+
+
+
 }
 
 double GradientDescent::ComputeGradient(int dim) {
@@ -96,13 +124,43 @@ std::vector<double> GradientDescent::ComputeGradientVector() {
     return  gradientVector;
 }
 
-double GradientDescent::ComputeGradientMagnitude(std::vector<double> gradientVector) {
+double GradientDescent::ComputeGradientMagnitude() {
     double vectorMagnitude = 0.0;
     for (int i = 0; i < nDims_; ++i) {
-        vectorMagnitude += gradientVector[i] * gradientVector[i];
+        vectorMagnitude += gradientVector_[i] * gradientVector_[i];
     }
     return sqrt(vectorMagnitude);
 
+}
+
+double GradientDescent::ComputeDeltaChangeMagnitude()
+{
+    double vectorMagnitude = 0.0;
+    if (history_.size() < 2) {
+        return stoppingMagnitude_;
+    }
+    for (auto i = 0; i < nDims_; ++i) {
+        vectorMagnitude += (currentPoint_[i] - prevPoint_[i]) * (currentPoint_[i] - prevPoint_[i]);
+    }
+    return sqrt(vectorMagnitude);
+}
+
+double GradientDescent::ComputeValueChangeMagnitude()
+{
+    double vectorMagnitude = 0;
+    if (history_.size() < 2) {
+        return stoppingMagnitude_;
+    }
+
+    vectorMagnitude = (objectFunc_(currentPoint_) - objectFunc_(prevPoint_))
+                    * (objectFunc_(currentPoint_) - objectFunc_(prevPoint_)) ;
+
+    return sqrt(vectorMagnitude);
+}
+
+void GradientDescent::setStoppingCriterion(StoppingCriterion newStoppingCriterion)
+{
+    stoppingCriterion_ = newStoppingCriterion;
 }
 
 const std::vector<Point> &GradientDescent::history() const

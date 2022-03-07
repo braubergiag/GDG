@@ -6,6 +6,7 @@
 #include <functional>
 #include <map>
 using Function = std::function<double(const std::vector<double> &)>;
+
 using Point = std::vector<double>;
 
 class FunctionHandler

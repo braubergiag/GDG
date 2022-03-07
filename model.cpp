@@ -83,6 +83,7 @@ void Model::Run()
     gd_.InitFunctions(functionHandler_.objectFunction(),functionHandler_.gradFunction());
     gd_.Init(startPoint_,alpha_,
              iterCount_,gradientThreshHold_);
+    gd_.setStoppingCriterion(this->stoppingCriterion_);
     gd_.Optimize(functionLocation_,functionValue_);
     PrintResult();
 }
@@ -95,5 +96,10 @@ void Model::setStartPoint(Point newStartPoint)
 const FunctionHandler &Model::functionHandler() const
 {
     return functionHandler_;
+}
+
+void Model::setStoppingCriterion(StoppingCriterion newStoppingCriterion)
+{
+    stoppingCriterion_ = newStoppingCriterion;
 }
 

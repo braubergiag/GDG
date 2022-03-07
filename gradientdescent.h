@@ -6,6 +6,8 @@
 #include <functional>
 #include <cmath>
 #include <iostream>
+#include <utility>
+#include <map>
 
 
 using Function = std::function<double(const std::vector<double> &)>;
@@ -25,28 +27,40 @@ public:
     GradientDescent();
     ~GradientDescent();
     void InitFunctions(const Function &  objectFunc,const std::vector<Function>& gradFunc);
-    bool Optimize(std::vector<double> & funcLoc, double & funcVal);
     void Init(const Point& startPoint, double stepSize, uint maxIterations,double gradientThresh);
+    bool Optimize(std::vector<double> & funcLoc, double & funcVal);
 
 
+    // Setters
+    void setStoppingCriterion(StoppingCriterion newStoppingCriterion);
+
+    // Getters
     const std::vector<Point> &history() const;
 
 private:
     double ComputeGradient (int dim);
     double ComputeGradientAnalytical(int dim);
     std::vector<double> ComputeGradientVector();
-    double ComputeGradientMagnitude(std::vector<double> gradientVector);
+    // Stopping Critereis functions
+    double ComputeGradientMagnitude();
+    double ComputeDeltaChangeMagnitude();
+    double ComputeValueChangeMagnitude();
 
-    std::vector<double> startPoint_;
-    std::vector<double> currentPoint_;
-    std::vector<Point> history_;
+
 
     int nDims_;
     double alpha_;
     int maxIter_;
     double h_;
-    double gradientThresh_;
+    double eps_;
+    double stoppingMagnitude_ = 1.0;
 
+
+
+    StoppingCriterion stoppingCriterion_;
+    Point startPoint_,currentPoint_, prevPoint_;
+    std::vector<Point> history_;
+    std::vector<double> gradientVector_;
     Function objectFunc_;
     std::vector<Function> gradFunc_;
 

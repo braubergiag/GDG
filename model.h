@@ -40,11 +40,13 @@ public:
 
     const FunctionHandler &functionHandler() const;
 
+    void setStoppingCriterion(StoppingCriterion newStoppingCriterion);
+
 private:
     GradientDescent gd_;
     FunctionHandler  functionHandler_;
     std::vector<Point> history_;
-
+    StoppingCriterion stoppingCriterion_;
     Point startPoint_;
     Point functionLocation_;
 

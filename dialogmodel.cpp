@@ -12,6 +12,10 @@ DialogModel::DialogModel(QWidget *parent,Model * model,FunctionsLibrary * functi
 
     }
 
+    ui->rb_stop_1->setText("||grad f(x_{n})|| < eps");
+    ui->rb_stop_2->setText("||x_{n} - x_{n-1}|| < eps");
+    ui->rb_stop_3->setText("||f(x_{n}) - f(x_{n-1})|| < eps");
+
 }
 
 DialogModel::~DialogModel()
@@ -62,8 +66,20 @@ void DialogModel::on_buttonBox_accepted()
            fh.setDim((*functionsLibrary_)[funcStrView].dim());
        }
 
+       StoppingCriterion stoppingCriterion;
+       if (ui->rb_stop_1->isChecked()) {
+           stoppingCriterion = StoppingCriterion::byGradientMagnitude;
+       } else if (ui->rb_stop_2->isChecked()) {
+           stoppingCriterion = StoppingCriterion::byDeltaChangeMagnitude;
+       } else if (ui->rb_stop_3->isChecked()) {
+           stoppingCriterion = StoppingCriterion::byValueChangeMagnitude;
+       }
+
+
+
        model_->setFunctionHandler(fh);
        model_->setAlpha(alpha);
+       model_->setStoppingCriterion(stoppingCriterion);
        model_->setStartPoint(startPoint);
        model_->setGradientThreshHold(1e-09);
        model_->setIterCount(iterCount);
