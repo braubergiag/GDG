@@ -50,3 +50,23 @@ void FunctionHandler::setDim(int newDim)
 {
     dim_ = newDim;
 }
+
+const std::vector<Domain> &FunctionHandler::functionDomain() const
+{
+    return functionDomain_;
+}
+
+void FunctionHandler::setFunctionDomain(const std::vector<Domain> &newFunctionDomain)
+{
+    functionDomain_ = newFunctionDomain;
+}
+
+Point FunctionHandler::startPoint() const
+{
+    return startPoint_;
+}
+
+void FunctionHandler::setStartPoint(Point newStartPoint)
+{
+    startPoint_ = newStartPoint;
+}

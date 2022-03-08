@@ -49,6 +49,9 @@ void DialogModel::on_buttonBox_accepted()
 {
        auto funcStrView = ui->comboBoxFunc->currentText().toStdString();
        std::vector<double> startPoint = parseTxtToVector(ui->lineEdit_coords);
+
+
+
        int iterCount = ui->lineEdit_iterCount->text().toInt();
 
        double alpha = ui->lineEdit_4->text().toDouble();
@@ -66,6 +69,14 @@ void DialogModel::on_buttonBox_accepted()
            fh.setDim((*functionsLibrary_)[funcStrView].dim());
        }
 
+
+        for (auto i = 0; i < fh.dim(); ++i) {
+            QListWidgetItem * item;
+            item->setData(Qt::DisplayRole,"x" + QString::number(i) + ":" + QString::number(fh.startPoint().at(i)));
+            ui->list_start_coords->addItem(item);
+        }
+
+
        StoppingCriterion stoppingCriterion;
        if (ui->rb_stop_1->isChecked()) {
            stoppingCriterion = StoppingCriterion::byGradientMagnitude;
@@ -81,7 +92,7 @@ void DialogModel::on_buttonBox_accepted()
        model_->setAlpha(alpha);
        model_->setStoppingCriterion(stoppingCriterion);
        model_->setStartPoint(startPoint);
-       model_->setGradientThreshHold(1e-09);
+       model_->setGradientThreshHold(0.0000001);
        model_->setIterCount(iterCount);
 
        accept();

@@ -114,6 +114,9 @@ void MainWindow::setFunctionsLibrary()
             return 2 * y;
         };
         FunctionHandler fh_4(f4,{f4_dx,f4_dy},dim,f4View);
+        std::vector<Domain> domain = {{-2,2},{-2,2}};
+        fh_4.setFunctionDomain(domain);
+        fh_4.setStartPoint({0,0});
         (*functionsLibrary_)[f4View] = fh_4;
     }
     {
@@ -137,6 +140,9 @@ void MainWindow::setFunctionsLibrary()
             return -2 * x * exp(-pow(y,2)) * y;
         };
         FunctionHandler fh_5(f5,{f5_dx,f5_dy},dim,f5View);
+        std::vector<Domain> domain = {{-2,2},{-2,2}};
+        fh_5.setFunctionDomain(domain);
+        fh_5.setStartPoint({0,0});
         (*functionsLibrary_)[f5View] = fh_5;
 
     }
@@ -159,6 +165,9 @@ void MainWindow::setFunctionsLibrary()
             return -80./3 * sin(y/30.) * cos(y/30.);
         };
         FunctionHandler fh_6(f6,{f6_dx,f6_dy},dim,f6View);
+        std::vector<Domain> domain = {{-2,2},{-2,2}};
+        fh_6.setFunctionDomain(domain);
+        fh_6.setStartPoint({0,0});
         (*functionsLibrary_)[f6View] = fh_6;
     }
 

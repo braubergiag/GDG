@@ -49,10 +49,9 @@ bool GradientDescent::Optimize(std::vector<double> & funcLoc, double & funcVal) 
 
 
 
-
+    stoppingMagnitude_ = 1;
     history_.clear();
-
-    history_.push_back(funcLoc);
+    history_.push_back(startPoint_);
     while ((iterCount < maxIter_) && (stoppingMagnitude_ > eps_)) {
         gradientVector_ = ComputeGradientVector();
         stoppingMagnitude_ = (this->*evalMagnitude)();

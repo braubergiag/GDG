@@ -6,7 +6,7 @@
 #include <functional>
 #include <map>
 using Function = std::function<double(const std::vector<double> &)>;
-
+using Domain = std::pair<double,double>;
 using Point = std::vector<double>;
 
 class FunctionHandler
@@ -30,8 +30,16 @@ public:
     int dim() const;
     void setDim(int newDim);
 
+    const std::vector<Domain> &functionDomain() const;
+    void setFunctionDomain(const std::vector<Domain> &newFunctionDomain);
+
+    Point startPoint() const;
+    void setStartPoint(Point newStartPoint);
+
 private:
 
+    std::vector<Domain> functionDomain_; //
+    Point startPoint_;
     Function objectFunction_;
     std::vector<Function> gradFunction_;
     int dim_ = 0;
