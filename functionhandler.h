@@ -1,4 +1,4 @@
-#ifndef FUNCTIONHANDLER_H
+﻿#ifndef FUNCTIONHANDLER_H
 #define FUNCTIONHANDLER_H
 
 
@@ -14,27 +14,24 @@ class FunctionHandler
 public:
     FunctionHandler();
     FunctionHandler(const Function objectFunction,
-                    const std::vector<Function>  gradFunction,int dim=1,const std::string functionStrView = "");
+                    const std::vector<Function>  gradFunction,int dim=1,const std::string functionStrView = {});
 
-    const std::string &getFunctionStrView() const;
-    void setFunctionStrView(const std::string &newFunctionStrView);
 
-    const Function objectFunction() const;
-
-    const std::vector<Function> gradFunction() const;
+    Function getObjectFunction() const;
+    std::vector<Function> getGradFunction() const;
+    std::string getFunctionStrView() const;
+    int getDim() const;
+    std::vector<Domain> getFunctionDomain() const;
+    Point getStartPoint() const;
 
     void setObjectFunction(const Function &newObjectFunction);
-
     void setGradFunction(const std::vector<Function> &newGradFunction);
-
-    int dim() const;
+    void setFunctionStrView(const std::string &newFunctionStrView);
     void setDim(int newDim);
-
-    const std::vector<Domain> &functionDomain() const;
     void setFunctionDomain(const std::vector<Domain> &newFunctionDomain);
-
-    Point startPoint() const;
     void setStartPoint(Point newStartPoint);
+
+
 
 private:
 

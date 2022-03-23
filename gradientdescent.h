@@ -22,6 +22,7 @@ enum class StoppingCriterion {
 
 
 
+
 class GradientDescent {
 public:
     GradientDescent();
@@ -36,6 +37,10 @@ public:
 
     // Getters
     const std::vector<Point> &history() const;
+
+    const std::vector<std::vector<double> > &historyByCoord() const;
+
+    const std::vector<double> &functionValuesHistory() const;
 
 private:
     double ComputeGradient (int dim);
@@ -60,6 +65,8 @@ private:
     StoppingCriterion stoppingCriterion_;
     Point startPoint_,currentPoint_, prevPoint_;
     std::vector<Point> history_;
+    std::vector<std::vector<double>> historyByCoord_;
+    std::vector<double> functionValuesHistory_;
     std::vector<double> gradientVector_;
     Function objectFunc_;
     std::vector<Function> gradFunc_;

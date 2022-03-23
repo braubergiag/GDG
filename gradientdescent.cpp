@@ -8,7 +8,7 @@ GradientDescent::GradientDescent() {
     nDims_ = 0;
     alpha_ = 0.0;
     maxIter_ = 1;
-    h_ = 0.001;
+    h_ = 1e-09;
     eps_ = 1e-09;
 }
 
@@ -52,21 +52,32 @@ bool GradientDescent::Optimize(std::vector<double> & funcLoc, double & funcVal) 
     stoppingMagnitude_ = 1;
     history_.clear();
     history_.push_back(startPoint_);
+    historyByCoord_.clear();
+    functionValuesHistory_.clear();
+    for (auto i = 0; i < nDims_; ++i) {
+        historyByCoord_.push_back(std::vector<double>{});
+    }
+
     while ((iterCount < maxIter_) && (stoppingMagnitude_ > eps_)) {
         gradientVector_ = ComputeGradientVector();
         stoppingMagnitude_ = (this->*evalMagnitude)();
 
-        std::vector<double> newPoint  = currentPoint_;
+        std::vector<double> newPoint(nDims_,0);
         for (int i = 0; i < nDims_; ++i) {
-            newPoint[i]  += -(gradientVector_[i] * alpha_);
+            newPoint[i]  += currentPoint_[i] - (alpha_ * gradientVector_[i]);
+            historyByCoord_[i].push_back(newPoint[i]);
         }
         history_.push_back(currentPoint_);
         prevPoint_ = currentPoint_;
         currentPoint_ = newPoint;
+
+        functionValuesHistory_.push_back(objectFunc_(currentPoint_));
+
         iterCount++;
 
+        std::cout << "Iter " << iterCount << " ";
         for (auto v : currentPoint_) {
-              std::cout << v << " " ;
+              std::cout  <<  v << " " ;
         }
         std::cout << " " << objectFunc_(currentPoint_);
         std::cout << std::endl;
@@ -115,11 +126,10 @@ double GradientDescent::ComputeGradientAnalytical(int dim) {
 }
 
 std::vector<double> GradientDescent::ComputeGradientVector() {
-    std::vector<double> gradientVector = currentPoint_;
+    std::vector<double> gradientVector(nDims_,0);
     for (int i = 0; i < nDims_; ++i){
         gradientVector[i] = ComputeGradientAnalytical(i);
     }
-
     return  gradientVector;
 }
 
@@ -155,6 +165,16 @@ double GradientDescent::ComputeValueChangeMagnitude()
                     * (objectFunc_(currentPoint_) - objectFunc_(prevPoint_)) ;
 
     return sqrt(vectorMagnitude);
+}
+
+const std::vector<double> &GradientDescent::functionValuesHistory() const
+{
+    return functionValuesHistory_;
+}
+
+const std::vector<std::vector<double> > &GradientDescent::historyByCoord() const
+{
+    return historyByCoord_;
 }
 
 void GradientDescent::setStoppingCriterion(StoppingCriterion newStoppingCriterion)

@@ -28,7 +28,7 @@ private:
 
     Ui::MainWindow *ui;
     Model * model_ = nullptr;
-    FunctionsLibrary *  functionsLibrary_ = nullptr;
+
     QCustomPlot * counterPlot_ = nullptr;
 };
 #endif // MAINWINDOW_H

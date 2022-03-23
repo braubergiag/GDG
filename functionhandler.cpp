@@ -11,7 +11,7 @@ FunctionHandler::FunctionHandler( Function objectFunction,
 
 
 
-const std::string &FunctionHandler::getFunctionStrView() const
+std::string FunctionHandler::getFunctionStrView() const
 {
     return functionStrView_;
 }
@@ -21,12 +21,12 @@ void FunctionHandler::setFunctionStrView(const std::string &newFunctionStrView)
     functionStrView_ = newFunctionStrView;
 }
 
-const Function FunctionHandler::objectFunction() const
+ Function FunctionHandler::getObjectFunction() const
 {
     return objectFunction_;
 }
 
-const std::vector<Function> FunctionHandler::gradFunction() const
+ std::vector<Function> FunctionHandler::getGradFunction() const
 {
     return gradFunction_;
 }
@@ -41,7 +41,7 @@ void FunctionHandler::setGradFunction(const std::vector<Function> &newGradFuncti
     gradFunction_ = newGradFunction;
 }
 
-int FunctionHandler::dim() const
+int FunctionHandler::getDim() const
 {
     return dim_;
 }
@@ -51,7 +51,7 @@ void FunctionHandler::setDim(int newDim)
     dim_ = newDim;
 }
 
-const std::vector<Domain> &FunctionHandler::functionDomain() const
+std::vector<Domain> FunctionHandler::getFunctionDomain() const
 {
     return functionDomain_;
 }
@@ -61,7 +61,7 @@ void FunctionHandler::setFunctionDomain(const std::vector<Domain> &newFunctionDo
     functionDomain_ = newFunctionDomain;
 }
 
-Point FunctionHandler::startPoint() const
+Point FunctionHandler::getStartPoint() const
 {
     return startPoint_;
 }

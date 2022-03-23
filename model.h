@@ -10,50 +10,69 @@ class Model
 public:
     Model();
 
-    Point functionLocation() const;
-    void setFunctionLocation(Point newFunctionLocation);
+    FunctionHandler& functionHandler();
+    Point getFunctionLocation() const;
 
-    double functionValue() const;
-    void setFunctionValue(double newFunctionValue);
-
-    const std::vector<Point> &history() const;
-    void setHistory(const std::vector<Point> &newHistory);
-
+    std::vector<Point> history() const;
     const GradientDescent &gd() const;
+    double alpha() const;
 
+
+    void setFunctionLocation(Point newFunctionLocation);
+    void setHistory(const std::vector<Point> &newHistory);
     void setFunctionHandler(FunctionHandler newFunctionHandler);
+    void setAlpha(double newAlpha);
+    void setMagnitudeThreshHold(double newMagnitudeThreshHold);
+    void setIterCount(int newIterCount);
+    void setStartPoint(Point newStartPoint);
+    void setStoppingCriterion(StoppingCriterion newStoppingCriterion);
+
     void PrintResult();
 
 
-    double alpha() const;
-
-    void setAlpha(double newAlpha);
-
-    void setGradientThreshHold(double newGradientThreshHold);
-
-    void setIterCount(int newIterCount);
     void Run();
 
-    void setStartPoint(Point newStartPoint);
 
 
 
-    const FunctionHandler &functionHandler() const;
 
-    void setStoppingCriterion(StoppingCriterion newStoppingCriterion);
+
+
+    bool isInitialized() const;
+
+   double functionValue() const;
+
+   int iterCount() const;
+
+   StoppingCriterion stoppingCriterion() const;
+
+   double magnitude() const;
+   void setMagnitude(double newMagnitude);
+
+   const std::string &getMagnitudeENotation() const;
+   void setMagnitudeENotation(const std::string &newMagnitudeENotation);
+   void setFunctionsLibrary();
+   void setIsInitialized(bool newIsInitialized);
+
+   const FunctionsLibrary &functionsLibrary() const;
 
 private:
     GradientDescent gd_;
     FunctionHandler  functionHandler_;
     std::vector<Point> history_;
     StoppingCriterion stoppingCriterion_;
+    std::string magnitudeENotation;
     Point startPoint_;
     Point functionLocation_;
+    FunctionsLibrary functionsLibrary_;
 
-    double functionValue_ = 0;
-    double alpha_ = 0;
-    double gradientThreshHold_ = 0;
-    int iterCount_ = 0;
+    double functionValue_ {0};
+    double magnitude_ {0};
+    double alpha_{0};
+    double magnitudeThreshHold_ {0};
+    int iterCount_{0};
+
+    bool isInitialized_;
 
 };
 

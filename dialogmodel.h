@@ -16,13 +16,14 @@ class DialogModel : public QDialog
 
 public:
     explicit DialogModel(QWidget *parent = nullptr,
-                         Model * model = nullptr,
-                         FunctionsLibrary * functionsLibrary = nullptr);
+                         Model * model = nullptr);
     ~DialogModel();
 
 
-    std::vector<double> parseTxtToVector(QLineEdit * lineEdit);
-
+    void UpdateCoordinatesListWidget();
+    void LoadModelConfig();
+    StoppingCriterion GetStoppingCriterion();
+    void InitStoppingCriterion();
 
 private slots:
     void on_buttonBox_accepted();
@@ -30,7 +31,6 @@ private slots:
 private:
     Ui::DialogModel *ui;
     Model * model_ = nullptr;
-    FunctionsLibrary * functionsLibrary_ = nullptr;
 
 };
 

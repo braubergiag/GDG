@@ -6,15 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-
-    functionsLibrary_ = new FunctionsLibrary();
-    setFunctionsLibrary();
-
     counterPlot_ = new QCustomPlot();
     ui->verticalLayout->addWidget(counterPlot_);
-
-
     model_ = new Model();
 
 }
@@ -22,164 +15,15 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete counterPlot_;
-    delete functionsLibrary_;
     delete model_;
     delete ui;
 }
 
 void MainWindow::loadCounterPlot( QCustomPlot * customPlot)
 {
-
-
     if (customPlot){
         ui->verticalLayout->addWidget(customPlot);
     }
-
-
-}
-
-void MainWindow::setFunctionsLibrary()
-{
-    {
-        int dim = 2;
-        auto f1View = "(1 - x) * (1 - x) + 100 * (y - x * x) * (y - x * x)";
-        auto f1 = [](const Point &  functionLoc) {
-            double x = functionLoc.at(0);
-            double y = functionLoc.at(1);
-            return (1 - x) * (1 - x) + 100 * (y - x * x) * (y - x * x);
-        };
-        auto f1_dx = [](const Point &  functionLoc) {
-            double x = functionLoc.at(0);
-            double y = functionLoc.at(1);
-            return x * (400* x * x + 2) - 400*x*y - 2;
-        };
-        auto f1_dy = [](const Point &  functionLoc) {
-            double x = functionLoc.at(0);
-            double y = functionLoc.at(1);
-            return 200*y - 200* x * x;
-        };
-
-        FunctionHandler fh_1(f1,{f1_dx,f1_dy},dim,f1View);
-        (*functionsLibrary_)[f1View] = fh_1;
-    }
-
-    {
-        int dim = 1;
-        auto f2View = "(x * x * cos(x) - x) / 10";
-        auto f2 = [](const Point &  functionLoc) {
-            double x = functionLoc.at(0);
-            return (x * x * cos(x) - x) / 10;
-        };
-        auto f2_dx = [](const Point &  functionLoc) {
-            double x = functionLoc.at(0);
-            return -1./10*x*x*sin(x) + 1./5*x*cos(x) - 1./10;
-        };
-
-        FunctionHandler fh_2(f2,{f2_dx},dim,f2View);
-        (*functionsLibrary_)[f2View] = fh_2;
-
-
-    }
-    {
-        int dim = 1;
-        auto f3View = "x^4 + 2 * x^3 - 6 * x^2 + 4*x + 2";
-        auto f3 = [](const Point &  functionLoc) {
-            double x = functionLoc.at(0);
-            return pow(x,4) + 2 * pow(x,3) - 6 * x *x + 4*x + 2;
-        };
-        auto f3_dx = [](const Point &  functionLoc) {
-            double x = functionLoc.at(0);
-            return 4 * pow(x,3) + 6 * x * x - 12 * x + 4;
-        };
-
-        FunctionHandler fh_3(f3,{f3_dx},dim,f3View);
-        (*functionsLibrary_)[f3View] = fh_3;
-
-    }
-    {
-        int dim = 2;
-        auto f4View = "x * x + y * y";
-        auto f4 = [](const Point & functionLoc) {
-            double x = functionLoc.at(0);
-            double y = functionLoc.at(1);
-            return x * x + y * y;
-
-        };
-        auto f4_dx = [](const Point& functionLoc) {
-            double x  = functionLoc.at(0);
-            return 2 * x;
-        };
-        auto f4_dy = [](const Point& functionLoc) {
-            double y  = functionLoc.at(1);
-            return 2 * y;
-        };
-        FunctionHandler fh_4(f4,{f4_dx,f4_dy},dim,f4View);
-        std::vector<Domain> domain = {{-2,2},{-2,2}};
-        fh_4.setFunctionDomain(domain);
-        fh_4.setStartPoint({0,0});
-        (*functionsLibrary_)[f4View] = fh_4;
-    }
-    {
-
-
-        int dim = 2;
-        auto f5View = "x * exp(-|y|^2)";
-        auto f5 = [](const Point & functionLoc) {
-            double x = functionLoc.at(0);
-            double y = functionLoc.at(1);
-            return x * exp(-pow(abs(y),2));
-        };
-        auto f5_dx = [](const Point& functionLoc) {
-            double x  = functionLoc.at(0);
-            double y  = functionLoc.at(1);
-            return exp(-pow(abs(y),2));
-        };
-        auto f5_dy = [](const Point& functionLoc) {
-            double x  = functionLoc.at(0);
-            double y  = functionLoc.at(1);
-            return -2 * x * exp(-pow(y,2)) * y;
-        };
-        FunctionHandler fh_5(f5,{f5_dx,f5_dy},dim,f5View);
-        std::vector<Domain> domain = {{-2,2},{-2,2}};
-        fh_5.setFunctionDomain(domain);
-        fh_5.setStartPoint({0,0});
-        (*functionsLibrary_)[f5View] = fh_5;
-
-    }
-    {
-        int dim = 2;
-        auto f6View = "400 * (pow(sin(x/30),2) + (pow(cos(y/30),2)))";
-        auto f6 = [](const Point & functionLoc) {
-            double x = functionLoc.at(0);
-            double y = functionLoc.at(1);
-            return 400 * (pow(sin(x/30),2) + (pow(cos(y/30),2)));
-        };
-        auto f6_dx = [](const Point& functionLoc) {
-            double x  = functionLoc.at(0);
-            double y  = functionLoc.at(1);
-            return 80./3 * sin(x/30.) * cos(x/30.);
-        };
-        auto f6_dy = [](const Point& functionLoc) {
-            double x  = functionLoc.at(0);
-            double y  = functionLoc.at(1);
-            return -80./3 * sin(y/30.) * cos(y/30.);
-        };
-        FunctionHandler fh_6(f6,{f6_dx,f6_dy},dim,f6View);
-        std::vector<Domain> domain = {{-2,2},{-2,2}};
-        fh_6.setFunctionDomain(domain);
-        fh_6.setStartPoint({0,0});
-        (*functionsLibrary_)[f6View] = fh_6;
-    }
-
-
-
-
-
-
-
-
-
-
 }
 
 
@@ -187,27 +31,37 @@ void MainWindow::setFunctionsLibrary()
 QCustomPlot *MainWindow::createCounterPlot()
 {
     QCustomPlot * customPlot = new QCustomPlot();
-    customPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming
+    //customPlot->setInteractions(QCP::iRangeDrag);
     customPlot->axisRect()->setupFullAxesBox(true);
     customPlot->xAxis->setLabel("x");
     customPlot->yAxis->setLabel("y");
 
     // set up the QCPColorMap:
     QCPColorMap *colorMap = new QCPColorMap(customPlot->xAxis, customPlot->yAxis);
-    int nx = 10;
-    int ny = 10;
+    int nx = 200; //model_->gd().historyByCoord().at(0).size();
+    int ny = 200; //model_->gd().historyByCoord().at(0).size();
     colorMap->data()->setSize(nx, ny); // we want the color map to have nx * ny data points
-    colorMap->data()->setRange(QCPRange(-100, 100), QCPRange(-100, 100)); // and span the coordinate range -4..4 in both key (x) and value (y) dimensions
+
+    std::vector<Domain> domain = model_->functionHandler().getFunctionDomain();
+    double x1Min,x1Max,x2Min,x2Max;
+    x1Min = domain.at(0).first;
+    x1Max = domain.at(0).second;
+
+    x2Min = domain.at(1).first;
+    x2Max=  domain.at(1).second;
+
+
+
+    colorMap->data()->setRange(QCPRange(x1Min, x1Max), QCPRange(x2Min, x2Max)); // and span the coordinate range -4..4 in both key (x) and value (y) dimensions
     // now we assign some data, by accessing the QCPColorMapData instance of the color map:
     double x, y, z;
-
     for (int xIndex=0; xIndex<nx; ++xIndex )
     {
       for (int yIndex=0; yIndex<ny; ++yIndex)
       {
         colorMap->data()->cellToCoord(xIndex, yIndex, &x, &y);
-        auto func = model_->functionHandler().objectFunction();
-        z = func({x,y});
+        auto f = model_->functionHandler().getObjectFunction();
+        z = f({x,y});
         colorMap->data()->setCell(xIndex, yIndex, z);
       }
     }
@@ -217,7 +71,7 @@ QCustomPlot *MainWindow::createCounterPlot()
     customPlot->plotLayout()->addElement(0, 1, colorScale); // add it to the right of the main axis rect
     colorScale->setType(QCPAxis::atRight); // scale shall be vertical bar with tick/axis labels right (actually atRight is already the default)
     colorMap->setColorScale(colorScale); // associate the color map with the color scale
-    colorScale->axis()->setLabel("Magnetic Field Strength");
+    colorScale->axis()->setLabel("Function Range");
 
     // set the color gradient of the color map to one of the presets:
     colorMap->setGradient(QCPColorGradient::gpThermal);
@@ -240,26 +94,28 @@ QCustomPlot *MainWindow::createCounterPlot()
 
     //QCustomPlot * customPlot = new QCustomPlot();
 
-    QVector<double> x1,y1;
-     model_->setHistory(model_->gd().history());
-    for (auto i = 1; i < model_->history().size(); ++i){
-        x1.push_back( model_->history().at(i).at(0));
-        y1.push_back(model_->history().at(i).at(1));
-    }
+    QVector<double> x1 = QVector<double>(model_->gd().historyByCoord().at(0).begin(),
+                                        model_->gd().historyByCoord().at(0).end());
+    QVector<double> y1 = QVector<double>(model_->gd().historyByCoord().at(1).begin(),
+                                        model_->gd().historyByCoord().at(1).end());
 
 
     customPlot->addGraph();
     customPlot->graph(0)->setData(x1,y1);
     customPlot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDot));
-    QString graphTitle = QString("graphTitle");
+    QPen pen;
+    pen.setWidth(3);
+    pen.setColor(QColor(180,180,180));
+    customPlot->graph(0)->setPen(pen);
+
+
+    QString graphTitle = QString("GD curve");
     customPlot->graph(0)->setName(graphTitle);
 
-    customPlot->xAxis->setLabel("x");
-    customPlot->yAxis->setLabel("y");
-    customPlot->xAxis->setRange(-10,10);
-
-
-    customPlot->yAxis->setRange(-10,10);
+    customPlot->xAxis->setLabel("x1");
+    customPlot->yAxis->setLabel("x2");
+    customPlot->xAxis->setRange(x1Min,x1Max);
+    customPlot->yAxis->setRange(x2Min,x2Max);
 
 
     QVector<double> ticks;
@@ -297,11 +153,10 @@ QCustomPlot *MainWindow::createCounterPlot()
 
 void MainWindow::on_actionSet_Model_triggered()
 {
-    DialogModel * dlg = new DialogModel(this,model_,functionsLibrary_ );
+    DialogModel * dlg = new DialogModel(this,model_);
     dlg->exec();
     if (dlg->result() == QDialog::Accepted){
         model_->Run();
-
         if (counterPlot_) {
             ui->verticalLayout->removeWidget(counterPlot_);
             delete counterPlot_;
