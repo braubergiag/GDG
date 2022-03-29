@@ -67,23 +67,34 @@ bool GradientDescent::randomSearch(std::vector<double> &funcLoc,
                                    double &funcVal,FunctionHandler & fh)
 {
 
-    double range_x = fh.getFunctionDomain().at(0).second - fh.getFunctionDomain().at(0).first;
-    double range_y = fh.getFunctionDomain().at(1).second - fh.getFunctionDomain().at(1).first;
-    double mx = range_x / 2;
-    double my = range_y / 2;
-    double len = mx < my ? mx : my;
-    int iterCount = 0;
+    double xMin,xMax,yMin,yMax;
+     std::vector<Domain> domain =  functionHandler_.getFunctionDomain();
+    xMin = domain.at(0).first;
+    xMax = domain.at(0).second;
+
+    yMin = domain.at(1).first;
+    yMax=  domain.at(1).second;
+
+
+
+    double range_x = xMax - xMin;
+    double range_y = yMax - yMin;
+    double mx = xMin < 0 ? (range_x / 2) - (range_x / 2) : (range_x / 2);
+    double my = yMin < 0 ? (range_y / 2) - (range_y / 2) : (range_y / 2);
+
+    double len = range_x < range_y ? range_x / 2 : range_y / 2;
     double lx,ly,rx,ry,x,y;
 
 
     clearState();
     prepareState();
-
+    int iterCount = 0;
     unsigned m_seed  = std::chrono::system_clock::now().time_since_epoch().count();
     std::mt19937 generator;
     std::uniform_real_distribution<double> uniform_x,uniform_y;
     generator.seed(m_seed);
     PrintIterationLog(iterCount);
+
     while (iterCount < maxIter_ && len > eps_) {
         lx = mx - len;
         rx = mx + len;
@@ -236,7 +247,7 @@ void GradientDescent::clearState()
 void GradientDescent::prepareState()
 {
     history_.push_back(startPoint_);
-
+    currentPoint_ = startPoint_;
     for (auto i = 0; i < nDims_; ++i) {
         historyByCoord_.push_back(std::vector<double>{});
         historyByCoord_[i].push_back(startPoint_[i]);
