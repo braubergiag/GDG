@@ -62,6 +62,8 @@ public:
    Algorithm algorimth() const;
    void setAlgorimth(Algorithm newAlgorimth);
 
+   Point startPoint() const;
+
 private:
     GradientDescent gd_;
     FunctionHandler  functionHandler_;

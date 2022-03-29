@@ -23,8 +23,11 @@ public:
 
     void UpdateCoordinatesListWidget();
     void LoadModelConfig();
+
     StoppingCriterion GetStoppingCriterion();
     void InitStoppingCriterion();
+     void LoadDefaultFunction();
+signals:
 
 private slots:
     void on_buttonBox_accepted();

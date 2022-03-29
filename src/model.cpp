@@ -120,6 +120,11 @@ void Model::setAlgorimth(Algorithm newAlgorimth)
 {
     algorimth_ = newAlgorimth;
 }
+
+Point Model::startPoint() const
+{
+    return startPoint_;
+}
 void Model::setFunctionsLibrary()
 {
     {

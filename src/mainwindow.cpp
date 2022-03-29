@@ -118,7 +118,7 @@ QCustomPlot *MainWindow::createCounterPlot()
                                         model_->gd().historyByCoord().at(1).end());
 
     QPen pen;
-    pen.setWidth(2);
+    pen.setWidth(3);
     pen.setColor(QColor(180,180,180));
     QCPCurve *searchCurve = new QCPCurve(customPlot->xAxis, customPlot->yAxis);
     searchCurve->setName("Searching curve");

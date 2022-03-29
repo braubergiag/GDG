@@ -15,6 +15,8 @@ DialogModel::DialogModel(QWidget *parent,Model * model) :
 
     }
 
+
+
     double minDomain = -10e5;
     double maxDomain = 10e5;
     double minDomainRange = 0.01;
@@ -46,10 +48,20 @@ DialogModel::DialogModel(QWidget *parent,Model * model) :
         ui->trialsCountSpinBox->setValue(1000);
         ui->sc_groupbBox->setEnabled(false);
         ui->trialsCountSpinBox->setEnabled(false);
+        ui->rb_stop_1->setChecked(true);
+        ui->rb_gd->setChecked(true);
+        ui->comboBoxFunc->setCurrentIndex(0);
+        LoadDefaultFunction();
     }
 
-
-
+//    connect(ui->comboBoxFunc, QOverload<int>::of(&QComboBox::currentIndexChanged),
+//        [=](int index){ qDebug() << "currentIndexChanged"; });
+//   connect(ui->comboBoxFunc,&QComboBox::currentTextChanged,
+//        [=](const QString &text){ qDebug() << "currentTextChanged"; });
+//    connect(ui->comboBoxFunc, QOverload<int>::of(&QComboBox::highlighted),
+//        [=](int index){ qDebug() << "highlighted"; });
+//    connect(ui->comboBoxFunc, &QComboBox::editTextChanged,
+//        [=](const QString &text){ qDebug() << "editTextChanged"; });
 
 
     // Сhanging minValue for Domain
@@ -114,7 +126,13 @@ DialogModel::DialogModel(QWidget *parent,Model * model) :
         const auto & fh = model_->functionHandler();
          for (auto i = 0; i < fh.getDim(); ++i) {
              QListWidgetItem * item = new QListWidgetItem();
-             QString coordiateData = "x" + QString::number(i + 1) + " : " + QString::number(fh.getStartPoint().at(i))
+             double coordinatePoint = fh.getStartPoint().at(i);
+//             if (model_->isInitialized()) {
+//                 coordinatePoint = model_->startPoint().at(i);
+//             } else {
+//                 coordinatePoint = fh.getStartPoint().at(i);
+//             }
+             QString coordiateData = "x" + QString::number(i + 1) + " : " + QString::number(coordinatePoint)
                      +    "\t [" + QString::number(fh.getFunctionDomain().at(i).first) + ", "
                      +    QString::number(fh.getFunctionDomain().at(i).second) + "]";
              item->setData(Qt::DisplayRole,coordiateData);
@@ -156,6 +174,7 @@ DialogModel::DialogModel(QWidget *parent,Model * model) :
 //        }
 //    })
 
+
 }
 
 DialogModel::~DialogModel()
@@ -193,7 +212,12 @@ void DialogModel::LoadModelConfig()
        }
 
         ui->sb_alpha->setValue(model_->alpha());
-        ui->sb_iterCount->setValue(model_->iterCount());
+        if (model_->iterCount() == 0) {
+            ui->sb_iterCount->setValue(1000);
+        } else {
+             ui->sb_iterCount->setValue(model_->iterCount());
+        }
+
         int index_2 = ui->cb_magnitude->findText(QString::fromStdString(model_->magnitudeENotation()));
         if (index_2 != -1) {
           ui->cb_magnitude->setCurrentIndex(index_2);
@@ -207,10 +231,38 @@ void DialogModel::LoadModelConfig()
             ui->rb_rs->setChecked(true);
             ui->trialsCountSpinBox->setValue(model_->numberOfTrials());
              ui->trialsCountSpinBox->setEnabled(true);
+        } else {
+            ui->rb_gd->setChecked(true);
+            ui->sc_groupbBox->setEnabled(true);
         }
 
         InitStoppingCriterion();
         UpdateCoordinatesListWidget();
+
+
+}
+
+void DialogModel::LoadDefaultFunction()
+{
+    ui->list_start_coords->clear();
+    ui->startValueDoubleSpinBox->clear();
+    ui->minDoubleSpinBox->clear();
+    ui->maxDoubleSpinBox->clear();
+    auto functionName = ui->comboBoxFunc->currentText().toStdString();
+    isInit = true;
+
+    model_->setFunctionHandler( model_->functionsLibrary().at(functionName));
+
+
+    const auto & fh = model_->functionHandler();
+     for (auto i = 0; i < fh.getDim(); ++i) {
+         QListWidgetItem * item = new QListWidgetItem();
+         QString coordiateData = "x" + QString::number(i + 1) + " : " + QString::number(fh.getStartPoint().at(i))
+                 +    "\t [" + QString::number(fh.getFunctionDomain().at(i).first) + ", "
+                 +    QString::number(fh.getFunctionDomain().at(i).second) + "]";
+         item->setData(Qt::DisplayRole,coordiateData);
+         ui->list_start_coords->addItem(item);
+     }
 
 
 }
