@@ -117,21 +117,16 @@ QCustomPlot *MainWindow::createCounterPlot()
     QVector<double> y1 = QVector<double>(model_->gd().historyByCoord().at(1).begin(),
                                         model_->gd().historyByCoord().at(1).end());
 
-
-    customPlot->addGraph();
-    customPlot->graph(0)->setData(x1,y1);
-    customPlot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDot));
     QPen pen;
-    pen.setWidth(3);
+    pen.setWidth(2);
     pen.setColor(QColor(180,180,180));
-    customPlot->graph(0)->setPen(pen);
+    QCPCurve *searchCurve = new QCPCurve(customPlot->xAxis, customPlot->yAxis);
+    searchCurve->setName("Searching curve");
+    searchCurve->setData(x1, y1);
+    searchCurve->setPen(pen);
 
-
-    QString graphTitle = QString("Search curve");
-    customPlot->graph(0)->setName(graphTitle);
-
-    customPlot->xAxis->setLabel("x1");
-    customPlot->yAxis->setLabel("x2");
+    customPlot->xAxis->setLabel("x");
+    customPlot->yAxis->setLabel("y");
     customPlot->xAxis->setRange(x1Min,x1Max);
     customPlot->yAxis->setRange(x2Min,x2Max);
 
@@ -165,8 +160,6 @@ QCustomPlot *MainWindow::createCounterPlot()
     customPlot->plotLayout()->addElement(0, 0, new QCPTextElement(customPlot, info, QFont("sans", 10, QFont::Normal)));
     customPlot->replot();
 
-
-//    connect(customPlot, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(reDraw(QMouseEvent*)));
     connect(customPlot,&QCustomPlot::mousePress,this,&MainWindow::reDraw);
 
 

@@ -37,6 +37,7 @@ bool GradientDescent::Optimize(std::vector<double> & funcLoc, double & funcVal) 
     prepareState();
 
     InitStoppingCriterion();
+    PrintIterationLog(iterCount);
     while ((iterCount < maxIter_) && (stoppingMagnitude_ > eps_)) {
         gradientVector_ = ComputeGradientVector();
         stoppingMagnitude_ = (this->*evalMagnitude)();
@@ -44,14 +45,15 @@ bool GradientDescent::Optimize(std::vector<double> & funcLoc, double & funcVal) 
         std::vector<double> newPoint(nDims_,0);
         for (int i = 0; i < nDims_; ++i) {
             newPoint[i]  += currentPoint_[i] - (alpha_ * gradientVector_[i]);
-            historyByCoord_[i].push_back(newPoint[i]);
+            historyByCoord_.at(i).push_back(newPoint[i]);
+
         }
         history_.push_back(currentPoint_);
         prevPoint_ = currentPoint_;
         currentPoint_ = newPoint;
         functionValuesHistory_.push_back(objectFunc_(currentPoint_));
 
-        PrintIterationLog(iterCount);
+        PrintIterationLog(iterCount + 1);
         iterCount++;
 
 
@@ -81,7 +83,7 @@ bool GradientDescent::randomSearch(std::vector<double> &funcLoc,
     std::mt19937 generator;
     std::uniform_real_distribution<double> uniform_x,uniform_y;
     generator.seed(m_seed);
-
+    PrintIterationLog(iterCount);
     while (iterCount < maxIter_ && len > eps_) {
         lx = mx - len;
         rx = mx + len;
@@ -105,7 +107,7 @@ bool GradientDescent::randomSearch(std::vector<double> &funcLoc,
 
             }
         }
-        PrintIterationLog(iterCount);
+        PrintIterationLog(iterCount + 1);
         iterCount++;
         len *= 0.9;
     }
