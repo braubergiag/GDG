@@ -43,6 +43,14 @@ public:
 
     void clearState();
     void prepareState();
+    bool inDomain();
+
+    const FunctionHandler &fh() const;
+
+    void setFh(const FunctionHandler &newFh);
+
+    const FunctionHandler &functionHandler() const;
+    void setFunctionHandler(const FunctionHandler &newFunctionHandler);
 
 private:
 
@@ -79,6 +87,7 @@ private:
     std::vector<double> gradientVector_;
     Function objectFunc_;
     std::vector<Function> gradFunc_;
+    FunctionHandler functionHandler_;
 
 };
 

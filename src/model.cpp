@@ -87,6 +87,7 @@ void Model::setIterCount(int newIterCount)
 void Model::run()
 {
     gd_.InitFunctions(functionHandler_.getObjectFunction(),functionHandler_.getGradFunction());
+    gd_.setFunctionHandler(functionHandler_);
     gd_.Init(startPoint_,alpha_,
              iterCount_,magnitudeThreshHold_);
     gd_.setStoppingCriterion(this->stoppingCriterion_);

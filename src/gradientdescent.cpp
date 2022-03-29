@@ -38,7 +38,7 @@ bool GradientDescent::Optimize(std::vector<double> & funcLoc, double & funcVal) 
 
     InitStoppingCriterion();
     PrintIterationLog(iterCount);
-    while ((iterCount < maxIter_) && (stoppingMagnitude_ > eps_)) {
+    while ((iterCount < maxIter_) && (stoppingMagnitude_ > eps_) && inDomain()) {
         gradientVector_ = ComputeGradientVector();
         stoppingMagnitude_ = (this->*evalMagnitude)();
 
@@ -209,6 +209,18 @@ void GradientDescent::PrintIterationLog(int iter)
     std::cout << std::endl;
 }
 
+const FunctionHandler &GradientDescent::functionHandler() const
+{
+    return functionHandler_;
+}
+
+void GradientDescent::setFunctionHandler(const FunctionHandler &newFunctionHandler)
+{
+    functionHandler_ = newFunctionHandler;
+}
+
+
+
 uint GradientDescent::numberOfTrials() const
 {
     return numberOfTrials_;
@@ -229,6 +241,25 @@ void GradientDescent::prepareState()
         historyByCoord_.push_back(std::vector<double>{});
         historyByCoord_[i].push_back(startPoint_[i]);
     }
+}
+
+bool GradientDescent::inDomain()
+{
+    double xMin,xMax,yMin,yMax;
+     std::vector<Domain> domain =  functionHandler_.getFunctionDomain();
+    xMin = domain.at(0).first;
+    xMax = domain.at(0).second;
+
+    yMin = domain.at(1).first;
+    yMax=  domain.at(1).second;
+
+
+    double x = currentPoint_.at(0);
+    double y = currentPoint_.at(1);
+    if (abs(x) >= abs(xMin) || abs(x) >= abs(xMax) || abs(y) >= abs(yMin) || abs(y) >= abs(yMax)) {
+        return false;
+    }
+    return true;
 }
 
 void GradientDescent::setNumberOfTrials(uint newNumberOfTrials)
