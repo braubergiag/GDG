@@ -30,14 +30,11 @@ bool GradientDescent::Optimize(std::vector<double> & funcLoc, double & funcVal) 
     int iterCount = 0;
     stoppingMagnitude_ = 1;
 
-    history_.clear();
-    history_.push_back(startPoint_);
-    historyByCoord_.clear();
-    functionValuesHistory_.clear();
-    for (auto i = 0; i < nDims_; ++i) {
-        historyByCoord_.push_back(std::vector<double>{});
-        historyByCoord_[i].push_back(startPoint_[i]);
-    }
+
+
+
+    clearState();
+    prepareState();
 
     InitStoppingCriterion();
     while ((iterCount < maxIter_) && (stoppingMagnitude_ > eps_)) {
@@ -77,14 +74,9 @@ bool GradientDescent::randomSearch(std::vector<double> &funcLoc,
     double lx,ly,rx,ry,x,y;
 
 
-    history_.clear();
-    history_.push_back(startPoint_);
-    historyByCoord_.clear();
-    functionValuesHistory_.clear();
-    for (auto i = 0; i < nDims_; ++i) {
-        historyByCoord_.push_back(std::vector<double>{});
-        historyByCoord_[i].push_back(startPoint_[i]);
-    }
+    clearState();
+    prepareState();
+
     unsigned m_seed  = std::chrono::system_clock::now().time_since_epoch().count();
     std::mt19937 generator;
     std::uniform_real_distribution<double> uniform_x,uniform_y;
@@ -218,6 +210,23 @@ void GradientDescent::PrintIterationLog(int iter)
 uint GradientDescent::numberOfTrials() const
 {
     return numberOfTrials_;
+}
+
+void GradientDescent::clearState()
+{
+    history_.clear();
+    historyByCoord_.clear();
+    functionValuesHistory_.clear();
+}
+
+void GradientDescent::prepareState()
+{
+    history_.push_back(startPoint_);
+
+    for (auto i = 0; i < nDims_; ++i) {
+        historyByCoord_.push_back(std::vector<double>{});
+        historyByCoord_[i].push_back(startPoint_[i]);
+    }
 }
 
 void GradientDescent::setNumberOfTrials(uint newNumberOfTrials)

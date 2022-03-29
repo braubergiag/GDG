@@ -33,14 +33,16 @@ public:
 
     // Setters
     void setStoppingCriterion(StoppingCriterion newStoppingCriterion);
+    void setNumberOfTrials(uint newNumberOfTrials);
 
     // Getters
     const std::vector<Point> &history() const;
     const std::vector<std::vector<double> > &historyByCoord() const;
     const std::vector<double> &functionValuesHistory() const;
-
     uint numberOfTrials() const;
-    void setNumberOfTrials(uint newNumberOfTrials);
+
+    void clearState();
+    void prepareState();
 
 private:
 

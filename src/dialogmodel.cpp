@@ -254,7 +254,9 @@ void DialogModel::InitStoppingCriterion()
 
 void DialogModel::on_buttonBox_accepted()
 {
-
+         if ( ui->rb_gd->isChecked() || ui->rb_rs->isChecked()) {
+              isInitMethod = true;
+         }
 
         if (!isInit) {
             QMessageBox * msgBox = new QMessageBox(this);
@@ -264,16 +266,33 @@ void DialogModel::on_buttonBox_accepted()
             return;
         }
 
+        if (!isInitMethod) {
+                    QMessageBox * msgBox = new QMessageBox(this);
+                    msgBox->setText("You need to choose a method.");
+                    msgBox->exec();
+                    reject();
+                    return;
+                }
+
+
+
+
+
 
        model_->setAlpha(ui->sb_alpha->value());
        if (ui->rb_gd->isChecked()){
             model_->setAlgorimth(Algorithm::gradientDescent);
             model_->setStoppingCriterion(GetStoppingCriterion());
+            isInitMethod = true;
        } else if (ui->rb_rs->isChecked()){
            model_->setAlgorimth(Algorithm::randomSearch);
            model_->setNumberOfTrials(ui->trialsCountSpinBox->value());
+           isInitMethod = true;
 
        }
+
+
+
 
        model_->setStartPoint(model_->functionHandler().getStartPoint());
        model_->setMagnitudeThreshHold(ui->cb_magnitude->currentText().toDouble());

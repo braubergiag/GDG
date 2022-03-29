@@ -42,6 +42,7 @@ private:
     Ui::DialogModel *ui;
     Model * model_ = nullptr;
     bool isInit{false};
+    bool isInitMethod{false};
 
 };
 

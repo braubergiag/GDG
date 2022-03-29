@@ -18,7 +18,8 @@ public:
     ~MainWindow();
     void loadCounterPlot(QCustomPlot * customPLot);
     void setFunctionsLibrary();
-    QCustomPlot * createCounterPlot();
+    QCustomPlot *createCounterPlot();
+    void reDraw(QMouseEvent * event);
 
 private slots:
     void on_actionSet_Model_triggered();

@@ -6,8 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    counterPlot_ = new QCustomPlot();
-    ui->verticalLayout->addWidget(counterPlot_);
+
     model_ = new Model();
 
 }
@@ -23,13 +22,32 @@ void MainWindow::loadCounterPlot( QCustomPlot * customPlot)
 {
     if (customPlot){
         ui->verticalLayout->addWidget(customPlot);
+
     }
 }
 
+void MainWindow::reDraw(QMouseEvent * mouseEvent)
+{
 
+    if (counterPlot_){
+        double x = counterPlot_->xAxis->pixelToCoord(mouseEvent->pos().x());
+        double y = counterPlot_->yAxis->pixelToCoord(mouseEvent->pos().y());
+        model_->setStartPoint({x,y});
+        model_->run();
+
+        ui->verticalLayout->removeWidget(counterPlot_);
+
+//        delete counterPlot_;
+        counterPlot_ = createCounterPlot();
+        loadCounterPlot(counterPlot_);
+        qDebug() <<x << "\t" << y << "\n";
+    }
+
+}
 
 QCustomPlot *MainWindow::createCounterPlot()
 {
+
     QCustomPlot * customPlot = new QCustomPlot();
     //customPlot->setInteractions(QCP::iRangeDrag);
     customPlot->axisRect()->setupFullAxesBox(true);
@@ -147,8 +165,15 @@ QCustomPlot *MainWindow::createCounterPlot()
     customPlot->plotLayout()->addElement(0, 0, new QCPTextElement(customPlot, info, QFont("sans", 10, QFont::Normal)));
     customPlot->replot();
 
-    return customPlot;
+
+//    connect(customPlot, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(reDraw(QMouseEvent*)));
+    connect(customPlot,&QCustomPlot::mousePress,this,&MainWindow::reDraw);
+
+
+            return customPlot;
 }
+
+
 
 
 void MainWindow::on_actionSet_Model_triggered()
@@ -162,7 +187,6 @@ void MainWindow::on_actionSet_Model_triggered()
             delete counterPlot_;
         }
         if (model_->functionHandler().getDim() == 2){
-            counterPlot_ = new QCustomPlot();
             counterPlot_ = createCounterPlot();
             loadCounterPlot(counterPlot_);
         }
