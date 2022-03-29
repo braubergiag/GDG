@@ -35,9 +35,9 @@ std::string Model::stoppingCriterionStrView() const
 {
     switch (stoppingCriterion_) {
         case StoppingCriterion::byDeltaChangeMagnitude:
-            return "Difference beetween function values";
-        case StoppingCriterion::byValueChangeMagnitude:
             return "Difference beetween points";
+        case StoppingCriterion::byValueChangeMagnitude:
+            return "Difference beetween function values";
         case StoppingCriterion::byGradientMagnitude:
             return "Gradient Magnitude";
         default:

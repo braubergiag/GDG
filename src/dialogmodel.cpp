@@ -21,8 +21,10 @@ DialogModel::DialogModel(QWidget *parent,Model * model) :
     ui->minDoubleSpinBox->setRange(minDomain,maxDomain- minDomainRange);
     ui->maxDoubleSpinBox->setRange(minDomain + minDomainRange,maxDomain);
 
+    ui->trialsCountSpinBox->setMinimum(100);
     ui->trialsCountSpinBox->setSingleStep(100);
     ui->trialsCountSpinBox->setMaximum(1000);
+
 
     ui->sb_alpha->setSingleStep(0.001);
     ui->sb_alpha->setDecimals(3);
