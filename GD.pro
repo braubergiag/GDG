@@ -9,25 +9,29 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    dialogmodel.cpp \
-    functionhandler.cpp \
-    gradientdescent.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    model.cpp \
-    qcustomplot.cpp
+    src/dialogmodel.cpp \
+     src/functionhandler.cpp \
+     src/gradientdescent.cpp \
+     src/main.cpp \
+     src/mainwindow.cpp \
+     src/model.cpp \
+     src/qcustomplot.cpp
 
 HEADERS += \
-    dialogmodel.h \
-    functionhandler.h \
-    gradientdescent.h \
-    mainwindow.h \
-    model.h \
-    qcustomplot.h
+    includes/dialogmodel.h \
+    includes/functionhandler.h \
+    includes/gradientdescent.h \
+    includes/mainwindow.h \
+    includes/model.h \
+    includes/qcustomplot.h
 
 FORMS += \
-    dialogmodel.ui \
-    mainwindow.ui
+    ui/dialogmodel.ui \
+    ui/mainwindow.ui
+
+INCLUDEPATH+= includes/
+INCLUDEPATH+= src/
+INCLUDEPATH+= ui/
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
